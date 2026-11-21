@@ -1,0 +1,3 @@
+window.__dd={done:false,out:{},n:0};(async()=>{const L=["/alquiler/piso/inmueble-u4995311_53050196"];const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+for(const p of L){try{const r=await fetch(p);const id=p.match(/(\d+)\/?$/)[1];if(!r.ok){window.__dd.out[id]='ERR'+r.status;}else{const t=await r.text();const d=new DOMParser().parseFromString(t,'text/html');let es=[...d.querySelectorAll('.box-readmore')].map(x=>x.innerText.replace(/[ \t]+/g,' ').trim()).filter(x=>x&&!/Al guardar, aceptas/.test(x)).sort((a,b)=>b.length-a.length);window.__dd.out[id]=es[0]||'';}}catch(e){}window.__dd.n++;await sleep(500);}
+window.__dd.done=true;})();'started'

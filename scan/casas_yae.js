@@ -1,0 +1,13 @@
+window.__rs=async()=>{window.__sc={done:false,out:[],rej:[],err:[]};const sleep=ms=>new Promise(r=>setTimeout(r,ms));const LS=JSON.parse(localStorage.getItem('casaSeen')||'[]');const K=new Set(__KNOWN__.concat(LS));
+const near=/./;
+const far=/Lleida|Girona|Berga|Olot|Figueres|Lloret|Tortosa|Amposta|Móra|Valls/i;
+const seen=new Set(),cand=[];
+for(const prov of ['barcelona-provincia','tarragona-provincia']){for(let p=1;p<=10;p++){const url='/alquiler/casas/'+prov+'/f--1100euros'+(p>1?'/pag-'+p:'');let r;try{r=await fetch(url)}catch(e){break}if(!r.ok)break;const d=new DOMParser().parseFromString(await r.text(),'text/html');const arts=[...d.querySelectorAll('article')];let fresh=0;
+for(const a of arts){const l=a.querySelector('a[href*="/inmueble-"]');if(!l)continue;const h=l.getAttribute('href').split('?')[0];const key=h.split('-').pop();if(seen.has(key))continue;seen.add(key);fresh++;if(K.has(key))continue;
+const t=a.innerText.replace(/\s+/g,' ').replace(/^\d+ \/ \d+ /,'').replace(/Opciones de galería/,'');const pr=parseInt(((t.match(/(\d[\d.]*) €/)||[])[1]||'').replace(/\./g,''));if(!(pr>=400&&pr<=1100))continue;if(far.test(t.slice(0,90))||!near.test(t.slice(0,90)))continue;
+cand.push({key,h,t:t.slice(0,90),pr,rm:(t.match(/(\d+) habs?/)||[])[1]||(/Estudio/i.test(t.slice(0,30))?'студия':'?'),m2:(t.match(/(\d+) m²/)||[])[1],temp:/temporada/i.test(t)});}
+if(!fresh)break;await sleep(400);}}
+const re=/(diciembre|enero|febrero|disponible (?:a partir|desde)|libre (?:el|a partir|desde)|a partir del \d|desde el \d+ de|1 de dic|NOS QUEDAN)/i;
+for(const c of cand){try{const t=await(await fetch(c.h)).text();const d=new DOMParser().parseFromString(t,'text/html');d.querySelectorAll('script,style,nav,footer').forEach(e=>e.remove());const body=d.body.innerText.replace(/\s+/g,' ');const m=body.match(re);
+window.__sc.out.push({site:'yaencontre',ref:c.h.split('/').pop(),url:'https://www.yaencontre.com'+c.h,loc:c.t,addr:c.t.replace(/\d[\d.]* €.*/,'').trim(),price:c.pr,rooms:c.rm,m2:c.m2,lift:'?',temp:c.temp,avail:(m?body.slice(Math.max(0,m.index-50),m.index+90):'')+' [F:'+(/sin amueblar|sin muebles/i.test(body)?'N':(/amueblad/i.test(body)?'Y':'?'))+']'});}catch(e){window.__sc.err.push(c.key)}await sleep(400);}
+try{localStorage.setItem('casaSeen',JSON.stringify([...new Set(LS.concat(cand.map(c=>String(c.key))))]));}catch(e){}window.__sc.tsv=window.__sc.out.map(o=>[o.site,o.ref,String(o.addr).replace(/\s+/g,' ').slice(0,70),o.price,o.rooms,o.m2,o.lift,o.temp?1:0,(o.avail||'').slice(0,170),(o.site=='Fotocasa'||o.site=='Milanuncios')?o.url:''].join('¦')).join('\n');window.__sc.done=true;};localStorage.setItem('casaScan',window.__rs.toString());window.__rs();'started'

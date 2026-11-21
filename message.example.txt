@@ -1,0 +1,3 @@
+¡Hola! Me interesa su anuncio: {addr}, {price} €/mes ({link}).
+[Здесь ваш текст представления. Реальный текст храните в message.local.txt, он в .gitignore.]
+¿Podemos visitar la vivienda? Muchas gracias.

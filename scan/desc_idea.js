@@ -1,0 +1,3 @@
+window.__dd={done:false,out:{},n:0};(async()=>{const L=["/ru/inmueble/26363169/", "/ru/inmueble/113121166/", "/ru/inmueble/109477410/"];const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+for(const p of L){try{const r=await fetch(p);const id=p.match(/(\d+)\/?$/)[1];if(!r.ok){window.__dd.out[id]='ERR'+r.status;}else{const t=await r.text();const d=new DOMParser().parseFromString(t,'text/html');let e=d.querySelector('.commentsContainer .comment')||d.querySelector('.adCommentsLanguage')||d.querySelector('.commentsContainer');window.__dd.out[id]=e?e.innerText.replace(/\s+/g,' ').trim():'';}}catch(e){}window.__dd.n++;await sleep(500);}
+window.__dd.done=true;})();'started'

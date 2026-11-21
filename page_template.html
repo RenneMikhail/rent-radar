@@ -1,0 +1,382 @@
+<title>Аренда Барселона и окрестности</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/* Layout: sticky filter bar over a single-column list of tappable listing cards; phone first, two columns from 900px. */
+:root{
+  --bg:#eef2f4; --surface:#ffffff; --fg:#14232b; --muted:#5a6b74; --line:#d5dde2;
+  --accent:#0b7a8a; --accent-fg:#ffffff; --accent-soft:#d9eef1;
+  --g5:#1b7a3d; --g4:#4c9a2a; --g3:#b07d00; --g2:#c0392b; --g1:#8e1b12; --warn-bg:#fbe3e0;
+  --font-ui:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0e171c; --surface:#16232a; --fg:#e6eef1; --muted:#9db0b9; --line:#2a3a43;
+  --accent:#4cc3d3; --accent-fg:#06222a; --accent-soft:#12343b;
+  --g5:#5fd08a; --g4:#9ad25f; --g3:#e0b13a; --g2:#ff8a7a; --g1:#ff6b5a; --warn-bg:#3a1b18; color-scheme:dark;}}
+:root[data-theme="dark"]{
+  --bg:#0e171c; --surface:#16232a; --fg:#e6eef1; --muted:#9db0b9; --line:#2a3a43;
+  --accent:#4cc3d3; --accent-fg:#06222a; --accent-soft:#12343b;
+  --g5:#5fd08a; --g4:#9ad25f; --g3:#e0b13a; --g2:#ff8a7a; --g1:#ff6b5a; --warn-bg:#3a1b18; color-scheme:dark;}
+body{background:var(--bg);color:var(--fg);font-family:var(--font-ui);font-size:15px;line-height:1.4;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 40px}
+*{box-sizing:border-box}
+h1{font-size:21px;line-height:1.2;margin:18px 0 4px;text-wrap:balance}
+.sub{color:var(--muted);font-size:13px;margin:0 0 12px;max-width:62ch}
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);padding:8px 0 10px;border-bottom:1px solid var(--line)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--bg);z-index:10}
+.chips{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.lookup{margin:10px 0;border:1px solid var(--line);border-radius:12px;background:var(--surface);padding:10px 12px}
+.lookup summary{cursor:pointer;font-weight:600}
+.lookup input{width:100%;margin-top:8px;box-sizing:border-box}
+.lkr .lki{border-top:1px solid var(--line);padding:8px 0;font-size:14px}
+.lkr .lki a{color:var(--accent)}
+.lkr .lkm{color:var(--muted);font-size:12px}
+.chip{flex:0 0 auto;border:1px solid var(--line);background:var(--surface);color:var(--fg);border-radius:999px;padding:9px 14px;font:inherit;font-size:14px;min-height:40px}
+.chip[aria-pressed="true"]{background:var(--accent);color:var(--accent-fg);border-color:var(--accent)}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:6px}
+input[type=search],select{font:inherit;font-size:15px;background:var(--surface);color:var(--fg);border:1px solid var(--line);border-radius:10px;padding:10px 12px;min-height:42px;min-width:0}
+input[type=search]{flex:1 1 160px}
+.count{color:var(--muted);font-size:13px;margin:12px 0 8px}
+.list{display:grid;grid-template-columns:1fr;gap:12px}
+@media (min-width:900px){.list{grid-template-columns:1fr 1fr}}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.price{font-size:24px;font-weight:700;font-variant-numeric:tabular-nums}
+.price small{font-size:13px;font-weight:500;color:var(--muted)}
+.facts{color:var(--fg);font-size:15px}
+.zone{font-weight:600}
+.addr{color:var(--muted);font-size:14px;overflow-wrap:anywhere}
+.grade{flex:0 0 auto;border-radius:8px;padding:4px 9px;font-weight:700;font-size:14px;border:1.5px solid currentColor;font-variant-numeric:tabular-nums}
+.g5{color:var(--g5)}.g4{color:var(--g4)}.g3{color:var(--g3)}.g2{color:var(--g2)}.g1{color:var(--g1)}
+.tags{display:flex;gap:6px;flex-wrap:wrap}
+.tag{font-size:12px;border-radius:6px;padding:3px 7px;background:var(--accent-soft);color:var(--fg)}
+.tag.new{background:var(--accent);color:var(--accent-fg);font-weight:700}
+.avail{margin-top:4px;font-size:13px;color:var(--g3);font-weight:600}
+.tag.warn{background:var(--warn-bg);color:var(--g1);font-weight:600}
+details{font-size:13px;color:var(--muted)}
+summary{cursor:pointer;padding:4px 0}
+.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:2px}
+.open{flex:1 1 auto;text-align:center;text-decoration:none;background:var(--accent);color:var(--accent-fg);border-radius:10px;padding:13px 14px;font-weight:600;font-size:16px;min-height:48px}
+.btn{flex:0 0 auto;border:1px solid var(--line);background:var(--surface);color:var(--fg);border-radius:10px;padding:0 14px;font:inherit;font-size:15px;min-height:48px}
+.btn[aria-pressed="true"]{border-color:var(--accent);color:var(--accent);font-weight:700}
+.more p{margin:6px 0;color:var(--fg)}.src{margin:4px 0 0;padding-left:18px}.src a{color:var(--accent)}
+.actions2{display:flex;gap:8px;flex-wrap:wrap}.btn2{flex:1 1 140px;text-align:center;text-decoration:none;border:1px solid var(--line);color:var(--fg);background:var(--surface);border-radius:10px;padding:11px 10px;font-size:14px;min-height:44px}
+.url{font-size:12px;color:var(--muted);overflow-wrap:anywhere;user-select:all}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.empty{padding:30px 0;color:var(--muted);text-align:center}
+
+.card{position:relative}
+.card.m-seen{background:color-mix(in srgb,#ec4899 15%,var(--surface));border-color:#ec4899}
+.card.m-bad{background:color-mix(in srgb,#dc2626 17%,var(--surface));border-color:#dc2626}
+.card.m-good{background:color-mix(in srgb,#16a34a 17%,var(--surface));border-color:#16a34a}
+.mk{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.mkb{border:1.5px solid var(--line);background:var(--surface);color:var(--fg);border-radius:10px;padding:0 8px;font:inherit;font-size:14px;min-height:46px}
+.mkb[data-mk="seen"][aria-pressed="true"]{background:#ec4899;border-color:#ec4899;color:#fff;font-weight:700}
+.mkb[data-mk="bad"][aria-pressed="true"]{background:#dc2626;border-color:#dc2626;color:#fff;font-weight:700}
+.mkb[data-mk="good"][aria-pressed="true"]{background:#16a34a;border-color:#16a34a;color:#fff;font-weight:700}
+
+.trd{margin-top:8px}.trd summary{font-size:14px;color:var(--fg)}
+.trb{white-space:pre-wrap;font-size:14px;line-height:1.45;margin-top:6px;padding:8px 10px;background:var(--accent-soft);border-radius:8px}
+.trb a{color:var(--accent)}
+.send{margin-top:10px;padding-top:8px;border-top:1px dashed var(--line)}
+.send .sl{font-size:12px;color:var(--muted,var(--fg));margin-bottom:6px;opacity:.8}
+.send .sr{display:flex;flex-wrap:wrap;gap:8px}
+.sbtn{border:1.5px solid var(--line);background:var(--surface);color:var(--fg);border-radius:10px;padding:0 12px;font:inherit;font-size:14px;min-height:44px;display:inline-flex;align-items:center;text-decoration:none;cursor:pointer}
+.sbtn.wa{background:#16a34a;border-color:#16a34a;color:#fff;font-weight:700}
+.gal{position:relative;display:flex;gap:6px;overflow-x:auto;scroll-snap-type:x mandatory;border-radius:10px;scrollbar-width:none;background:var(--accent-soft)}
+.gal.ph{min-height:210px}
+.gal::-webkit-scrollbar{display:none}
+.gal img{flex:0 0 100%;width:100%;height:210px;object-fit:cover;scroll-snap-align:center;display:block}
+.gn{position:sticky;right:8px;bottom:8px;align-self:flex-end;margin-left:-70px;margin-right:8px;margin-bottom:8px;flex:0 0 auto;background:rgba(0,0,0,.6);color:#fff;font-size:12px;border-radius:999px;padding:2px 9px}
+.mapd summary{font-size:14px;color:var(--fg)}
+.map{position:relative;height:auto;min-height:60px;border-radius:10px;overflow:hidden;background:var(--accent-soft);margin-top:6px}
+.map img{width:100%;height:100%;object-fit:cover;display:block}
+.pin{position:absolute;left:50%;top:50%;width:22px;height:22px;margin:-22px 0 0 -11px;background:#dc2626;border:3px solid #fff;border-radius:50% 50% 50% 0;transform:rotate(-45deg);box-shadow:0 1px 4px rgba(0,0,0,.5)}
+.circ{position:absolute;left:50%;top:50%;border:2px solid #dc2626;background:rgba(220,38,38,.16);border-radius:50%;transform:translate(-50%,-50%)}
+.attr{position:absolute;right:4px;bottom:2px;font-size:10px;background:rgba(255,255,255,.8);color:#222;padding:0 4px;border-radius:4px}
+.nophoto{font-size:12px;color:var(--muted)}
+.tag.ok{background:color-mix(in srgb,#16a34a 22%,var(--surface));color:var(--fg);font-weight:600}
+.tag.mid{background:color-mix(in srgb,#d97706 22%,var(--surface));color:var(--fg);font-weight:600}
+.tag.no{background:var(--warn-bg);color:var(--g1)}
+.call{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.tel{flex:1 1 auto;text-align:center;text-decoration:none;background:#16a34a;color:#fff;border-radius:10px;padding:12px 14px;font-weight:700;font-size:17px;min-height:48px;font-variant-numeric:tabular-nums}
+.nophone{font-size:12px;color:var(--muted)}
+.gl{display:flex;flex-direction:column;gap:10px}
+.gi{background:color-mix(in srgb,#16a34a 15%,var(--surface));border:1px solid #16a34a;border-radius:14px;padding:12px;display:flex;flex-direction:column;gap:6px;min-width:0}
+.gi .gt{font-weight:700;font-size:17px}
+.gi .gz{color:var(--muted);font-size:14px;overflow-wrap:anywhere}
+.gi a.lnk{color:var(--accent);font-size:14px;overflow-wrap:anywhere}
+.gtools{display:flex;gap:8px;flex-wrap:wrap;margin:4px 0 10px}
+.gtxt{width:100%;min-height:160px;font:13px/1.4 ui-monospace,Menlo,monospace;background:var(--surface);color:var(--fg);border:1px solid var(--line);border-radius:10px;padding:10px}
+.foot{color:var(--muted);font-size:12px;margin-top:20px;max-width:70ch}
+</style>
+
+<h1>Аренда: Барселона и окрестности до Таррагоны</h1>
+<p class="sub" id="upd"></p>
+<p class="sub">Раздел «Комнаты»: Барселона, Валенсия и Кастельон, до 500 € в месяц, можно заехать на срок от 1 месяца; районы с наркоторговлей, высокой преступностью, зоной затопления и промзонами убраны. Квартиры и студии 500–850 € с мебелью в Барселоне, до Таррагоны и в Кастельон-де-ла-Плана и Валенсии с пригородами; всё, что далеко от Барселоны, по умолчанию показывается только с мебелью и парковкой (фильтр можно выключить), источники Idealista, Pisos.com, yaencontre, Fotocasa и Milanuncios. В каждой карточке есть сведения о районе (преступность, шум, затопление, транспорт) со ссылками на источники.</p>
+
+<details class="lookup" id="lk"><summary>📞 Кто звонит? Найти объявление по адресу или номеру</summary>
+  <input type="search" id="lkq" placeholder="Например: Paseo marítimo 7 Cambrils или +34 600 00 00 00" aria-label="Поиск по адресу или телефону во всех объявлениях">
+  <div id="lkr" class="lkr"></div>
+</details>
+
+<div class="bar">
+  <div class="chips" id="sections" role="group" aria-label="Раздел"></div>
+  <div class="chips" id="groups" role="group" aria-label="Город"></div>
+  <div class="chips" id="baths" hidden role="group" aria-label="Санузел"></div>
+  <div class="row">
+    <input type="search" id="q" placeholder="Район или улица" aria-label="Поиск по району или улице">
+    <select id="sort" aria-label="Сортировка">
+      <option value="score">Лучшие по оценке</option>
+      <option value="price">Цена: дешевле</option>
+      <option value="m2">Площадь: больше</option>
+    </select>
+  </div>
+  <div class="chips" id="toggles" style="margin-top:8px" role="group" aria-label="Фильтры">
+    <button class="chip" data-t="roomsmin" data-for="flat" aria-pressed="false">От 2 комнат</button>
+    <button class="chip" data-t="noflood" data-for="flat" aria-pressed="true">Без зон затопления</button>
+    <button class="chip" data-t="clean" data-for="flat" aria-pressed="false">Без наркоторговли и промзон</button>
+    <button class="chip" data-t="long" data-for="flat" aria-pressed="false">Только долгосрочные</button>
+    <button class="chip" data-t="lift" data-for="flat" aria-pressed="false">С лифтом</button>
+    <button class="chip" data-t="park" data-for="flat" aria-pressed="false">🚗 С парковкой</button>
+    <button class="chip" data-t="furn" data-for="flat" aria-pressed="false">🛋 Мебель подтверждена</button>
+    <button class="chip" data-t="farall" data-for="flat" aria-pressed="true">Далеко от Барселоны: только с мебелью и парковкой</button>
+    <button class="chip" data-t="soon" data-for="room" aria-pressed="true" hidden>Можно заехать в течение месяца</button>
+    <button class="chip" data-t="pair" data-for="room" aria-pressed="false" hidden>Точно можно вдвоём</button>
+    <button class="chip" data-t="fav" aria-pressed="false">Только зелёные</button>
+    <button class="chip" data-t="hideseen" aria-pressed="false">Скрыть просмотренные</button>
+    <button class="chip" data-t="hidebad" aria-pressed="false">Скрыть красные</button>
+  </div>
+</div>
+
+<div class="count" id="count"></div>
+<div class="list" id="list"></div>
+<p class="foot">Оценка района от 1 до 5 сложена из новостей, официальных данных по городам и общих знаний. Официальной статистики по отдельным районам и улицам нет (Минюст публикует только по городам), поэтому оценка по улице не заменяет визит. Транспорт указан по найденным источникам и общим знаниям, точные линии и частоту проверьте в Metrovalencia, Renfe и TRAM Castelló. Старая карта затопления SNCZI не показала все зоны DANA 2024, проверяйте и PATRICOVA. Мебель взята из текста объявлений и может быть не подтверждена. Пометки (смотрел, нет, да) хранятся в общей базе страницы и видны на всех ваших устройствах. Фото и карты подгружаются с сайтов объявлений и OpenStreetMap; точка на карте найдена по адресу из объявления, у части объявлений точного адреса нет, тогда показан район кругом.</p>
+
+<script>
+var DATA = __DATA__;
+var GROUPS_R = [["all","Все города"],["Барселона","Барселона"],["Валенсия","Валенсия"],["Кастельон","Кастельон"],["Таррагона","Таррагона"]];
+var BATHS = [["all","Все"],["private","С санузлом"],["no","Без санузла или не указан"]];
+var GROUPS = [["all","Все"],["Барселона","Барселона"],["Бахо-Льобрегат и Барселонес","Бахо-Льобрегат"],["Маресме","Маресме"],["Сабадель и Террасса","Сабадель/Террасса"],["Вальес","Вальес"],["Гарраф и Пенедес","Гарраф/Пенедес"],["Таррагона и побережье","Таррагона"],["В часе от Барселоны","В часе от Барселоны"],["Кастельон","Кастельон"],["Пригород Кастельона","Пригород Кастельона"],["Валенсия","Валенсия"],["Пригород Валенсии","Пригород Валенсии"]];
+var FAR=['Таррагона и побережье','В часе от Барселоны','Гарраф и Пенедес','Кастельон','Пригород Кастельона','Валенсия','Пригород Валенсии'];
+var TODAY="__TODAY__", UPDATED="__UPDATED__";
+var state = {section:"main", group:"all", bath:"all", soon:true, pair:false, roomsmin:false, noflood:true, clean:false, long:false, lift:false, park:false, furn:false, farall:true, fav:false, hideseen:false, hidebad:false, hidden:false, q:"", sort:"score"};
+var marks = {}, favs = {}, nos = {}, store = null, called = {};
+try{ marks = JSON.parse(localStorage.getItem("rentMarks")||"{}"); }catch(e){}
+try{ called = JSON.parse(localStorage.getItem("rentCalled")||"{}"); }catch(e){}
+try{ var _n=JSON.parse(localStorage.getItem("rentNo")||"{}"), _f=JSON.parse(localStorage.getItem("rentFavs")||"{}"); for(var _k in _n) if(!marks[_k]) marks[_k]="bad"; for(var _k2 in _f) if(!marks[_k2]) marks[_k2]="good"; }catch(e){}
+function syncFavs(){ favs={}; for(var k in marks) if(marks[k]==="good") favs[k]=1; }
+function saveMarks(){ try{ localStorage.setItem("rentMarks", JSON.stringify(marks)); localStorage.setItem("rentCalled", JSON.stringify(called)); }catch(e){} }
+syncFavs();
+function mid(k){ var h=2166136261; for(var i=0;i<k.length;i++){ h^=k.charCodeAt(i); h=Math.imul(h,16777619)>>>0; } return "m"+h.toString(36); }
+function roomsN(c){ var r=c.rooms; if(/^\d+$/.test(r)) return +r; return 1; }
+function key(c){ return c.link; }
+function esc(s){ return String(s).replace(/[&<>"]/g,function(m){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m];}); }
+
+function isRoom(c){ return c.kind==="room"; }
+function isHouse(c){ return c.kind==="house"; }
+function score(c){ if(isRoom(c)) return c.score; var s=c.grade*10; if(c.m2) s+=Math.min(c.m2,95)/6; if(c.lift==="да") s+=3; if(c.temp) s-=2; if(roomsN(c)>=2&&!/студ/.test(c.rooms)) s+=6; if(c.m2&&c.m2<30) s-=10; if(c.flood) s-=30; return s; }
+DATA.forEach(function(c){ c.score=score(c); });
+
+function inSection(c){ if(state.section==="bad") return marks[c.link]==="bad"; if(marks[c.link]==="bad") return false; if(state.section==="called") return !!called[c.link]; if(state.section==="good") return marks[c.link]==="good"; if(state.section==="beyond") return c.group==="За Таррагоной"&&!isRoom(c)&&!isHouse(c)&&!called[c.link]; if(called[c.link]) return false; if(c.group==="За Таррагоной"&&!isRoom(c)&&!isHouse(c)) return false; if(state.section==="rooms") return isRoom(c); if(isRoom(c)) return false; if(state.section==="houses") return isHouse(c)&&!c.deferred; if(isHouse(c)) return false; if(state.section==="later") return c.deferred; if(c.deferred) return false; return state.section==="new"?isNew(c):true; }
+function buildSections(){
+  var ok=function(c){return marks[c.link]!=="bad"&&!called[c.link]&&!(c.group==="За Таррагоной"&&!isRoom(c)&&!isHouse(c));}, nNew=DATA.filter(function(c){return ok(c)&&!isRoom(c)&&!isHouse(c)&&!c.deferred&&isNew(c);}).length, nLater=DATA.filter(function(c){return ok(c)&&!isRoom(c)&&!isHouse(c)&&c.deferred;}).length, nMain=DATA.filter(function(c){return ok(c)&&!isRoom(c)&&!isHouse(c)&&!c.deferred;}).length, nRoom=DATA.filter(function(c){return ok(c)&&isRoom(c);}).length, nHouse=DATA.filter(function(c){return ok(c)&&isHouse(c)&&!c.deferred;}).length;
+  var nBey=DATA.filter(function(c){return c.group==="За Таррагоной"&&!isRoom(c)&&!isHouse(c)&&marks[c.link]!=="bad"&&!called[c.link];}).length, nCalled=DATA.filter(function(c){return !!called[c.link]&&marks[c.link]!=="bad";}).length, nGood=DATA.filter(function(c){return marks[c.link]==="good";}).length, nBad=DATA.filter(function(c){return marks[c.link]==="bad";}).length;
+  var S=[["main","Основной список · "+nMain],["new","Новые за день · "+nNew],["later","С декабря и позже · "+nLater],["rooms","Комнаты · "+nRoom],["houses","Дома у моря · "+nHouse],["beyond","За Таррагоной · "+nBey],["good","👍 Мои «Да» · "+nGood],["called","📞 Позвонил · "+nCalled],["bad","👎 Не нравится · "+nBad]];
+  document.getElementById("sections").innerHTML=S.map(function(s){return '<button class="chip" data-s="'+s[0]+'" aria-pressed="'+(state.section===s[0])+'">'+s[1]+'</button>';}).join("");
+}
+function buildGroups(){
+  var box=document.getElementById("groups");
+  var GL=state.section==="rooms"?GROUPS_R:GROUPS; box.innerHTML=GL.map(function(g){ var base=DATA.filter(inSection); var n=g[0]==="all"?base.length:base.filter(function(c){return c.group===g[0];}).length;
+    return '<button class="chip" data-g="'+esc(g[0])+'" aria-pressed="'+(state.group===g[0])+'">'+esc(g[1])+' · '+n+'</button>'; }).join("");
+}
+function buildBaths(){ var box=document.getElementById('baths'); box.hidden=state.section!=='rooms'; if(box.hidden) return; var base=DATA.filter(function(c){return isRoom(c)&&(state.group==='all'||c.group===state.group);}); box.innerHTML=BATHS.map(function(b){ var n=b[0]==='all'?base.length:base.filter(function(c){return b[0]==='private'?c.bath==='private':c.bath!=='private';}).length; return '<button class="chip" data-b="'+b[0]+'" aria-pressed="'+(state.bath===b[0])+'">'+b[1]+' · '+n+'</button>'; }).join(''); }
+function buildToggles(){ var g=(state.section==='good'||state.section==='bad'||state.section==='beyond'); document.getElementById('toggles').hidden=g; var r=state.section==='rooms'; document.querySelectorAll('#toggles [data-for]').forEach(function(b){ b.hidden = (b.dataset.for==='room')!==r; }); }
+function isNew(c){ return c.first_seen===TODAY && c.first_seen!=="2026-11-05"; }
+function hasPark(c){ return c.park==='incl'||c.park==='extra'||c.park==='yes'; }
+function fmtTel(n){ n=String(n||'').replace(/\D/g,''); if(n.length!==9) return n; return '+34 '+n.slice(0,3)+' '+n.slice(3,5)+' '+n.slice(5,7)+' '+n.slice(7); }
+function matches(c){
+  if(state.section==="bad") return marks[c.link]==="bad"; if(marks[c.link]==="bad") return false;
+  if(state.section==="called"){ if(!called[c.link]) return false; if(state.q){ var hq=(c.zone+" "+c.addr+" "+c.site).toLowerCase(); if(hq.indexOf(state.q.toLowerCase())<0) return false; } return true; }
+  if(called[c.link]) return false;
+  var bey=(c.group==="За Таррагоной"&&!isRoom(c)&&!isHouse(c)); if(state.section==="beyond"){ if(!bey) return false; } else if(bey) return false;
+  if(state.hideseen && (marks[c.link]==="seen"||marks[c.link]==="bad"||marks[c.link]==="good")) return false;
+  if(state.hidebad && marks[c.link]==="bad") return false;
+  if(isRoom(c)){ if(state.section!=="rooms"&&state.section!=="called") return false; if(state.soon && c.deferred) return false; if(state.pair && c.couple!=="Y") return false; if(state.group!=="all" && c.group!==state.group) return false; if(state.bath==="private" && c.bath!=="private") return false; if(state.bath==="no" && c.bath==="private") return false; if(state.fav && !favs[key(c)]) return false; if(state.q){ var hr=(c.zone+" "+c.addr+" "+c.site).toLowerCase(); if(hr.indexOf(state.q.toLowerCase())<0) return false; } return true; }
+  if(state.section==="rooms") return false;
+  if(state.section!=="called"&&isHouse(c)!==(state.section==="houses")) return false;
+  if(state.section==="later"){ if(!c.deferred) return false; }
+  else { if(c.deferred) return false; if(state.section==="new" && !isNew(c)) return false; }
+  if(state.group!=="all" && c.group!==state.group) return false;
+  if(state.roomsmin && !(roomsN(c)>=2 && !/студ/.test(c.rooms))) return false;
+  if(state.noflood && c.flood) return false;
+  if(state.clean && c.flags.some(function(f){return /наркотор|промзон|затоплен/.test(f);})) return false;
+  if(state.long && c.temp) return false;
+  if(state.lift && c.lift!=="да") return false;
+  if(state.park && !hasPark(c)) return false;
+  if(state.furn && c.furn!=="yes") return false;
+  if(state.farall && !isHouse(c) && FAR.indexOf(c.group)>=0 && !(c.furn==="yes" && hasPark(c))) return false;
+  if(state.fav && !favs[key(c)]) return false;
+  if(state.q){ var h=(c.zone+" "+c.addr+" "+c.site).toLowerCase(); if(h.indexOf(state.q.toLowerCase())<0) return false; }
+  return true;
+}
+
+function gallery(c){ if(isRoom(c)) return ''; if(!c.np) return '<div class="nophoto">Фото нет в данных, смотрите в объявлении</div>'; return '<div class="gal ph" data-pack="'+mid(key(c))+'"><span class="gn">'+c.np+' фото</span></div>'; }
+function mapBox(c){ if(!c.geo) return ''; var ap=(c.geo.lvl==="addr"||c.geo.lvl==="street")?"":" (район, примерно)"; return '<details class="mapd"><summary>Карта'+ap+'</summary><div class="map" data-pack="'+mid(key(c))+'"></div></details>'; }
+var packs={};
+function getPack(id){ if(!packs[id]) packs[id]=fetch("p/"+id+".json").then(function(r){ return r.ok?r.json():null; }).catch(function(){ return null; }); return packs[id]; }
+function fillGal(el){ getPack(el.dataset.pack).then(function(p){ if(!p||!p.p||!p.p.length){ el.textContent="Фото не загрузилось"; el.className="nophoto"; return; } el.innerHTML=p.p.map(function(u,i){ return '<img alt="Фото '+(i+1)+'" src="'+u+'">'; }).join("")+'<span class="gn">1/'+p.p.length+'</span>'; }); }
+var io=("IntersectionObserver" in window)?new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting){ io.unobserve(e.target); fillGal(e.target); } }); },{rootMargin:"500px"}):null;
+function watchGal(){ document.querySelectorAll("#list .gal.ph").forEach(function(el){ if(io) io.observe(el); else fillGal(el); }); }
+
+var MSG_TPL = __MSG__;
+function msgFor(c){ return MSG_TPL.split('{addr}').join(c.addr||c.zone||'').split('{price}').join(c.price).split('{link}').join(c.link); }
+function sendBox(c){ if(isRoom(c)) return ''; var m=msgFor(c);
+  var h='<div class="send"><div class="sl">Отправить мою визитку владельцу (отправляете вы сами одним нажатием)</div><div class="sr">';
+  if(c.phone) h+='<a class="sbtn wa" target="_blank" rel="noopener" href="https://wa.me/34'+esc(c.phone)+'?text='+encodeURIComponent(m)+'">💬 WhatsApp</a>';
+  h+='<button type="button" class="sbtn cp" data-msg="'+esc(m)+'">📋 Копировать сообщение</button><a class="sbtn" target="_blank" rel="noopener" href="'+esc(c.link)+'">🌐 Форма на сайте</a></div>';
+  if(!c.phone) h+='<div class="nophone">Номера нет в данных: скопируйте сообщение и вставьте в форму «Сообщение» на сайте объявления.</div>';
+  return h+'</div>'; }
+function trBox(c){ if(isRoom(c)) return ''; return '<details class="trd"><summary>Описание и перевод</summary><div class="trb" data-pack="'+mid(key(c))+'"></div></details>'; }
+document.addEventListener('click',function(e){ var b=e.target.closest&&e.target.closest('.sbtn.cp'); if(!b) return; var m=b.dataset.msg; var ok=function(){ b.textContent='✅ Скопировано'; setTimeout(function(){ b.textContent='📋 Копировать сообщение'; },1800); }; try{ navigator.clipboard.writeText(m).then(ok,function(){ }); }catch(_){} });
+document.addEventListener('toggle',function(e){ var el=e.target; if(!el.classList||!el.classList.contains('trd')||!el.open||el.dataset.done) return; el.dataset.done=1; var box=el.querySelector('.trb'); var id=box.dataset.pack;
+  box.textContent='Загружаю описание…';
+  getPack(id).then(function(p){ var d=p&&p.d; if(!d){ box.textContent='Описание не найдено в данных: откройте объявление на сайте.'; return; }
+    var ck='tr3_'+id+'_'+d.length;
+    var showOrig=function(tr){ box.innerHTML=''; if(tr){ box.appendChild(document.createTextNode(tr)); var dt=document.createElement('details'); dt.style.marginTop='10px'; var sm=document.createElement('summary'); sm.textContent='Оригинал, полный текст ('+d.length+' симв.)'; dt.appendChild(sm); var pre=document.createElement('div'); pre.style.whiteSpace='pre-wrap'; pre.style.marginTop='6px'; pre.textContent=d; dt.appendChild(pre); box.appendChild(dt); } else { box.appendChild(document.createTextNode(d)); } };
+    if((d.match(/[А-Яа-яЁё]/g)||[]).length>d.length*0.4){ showOrig(null); return; }
+    try{ var cached=localStorage.getItem(ck); if(cached){ showOrig(cached); return; } }catch(_){}
+    var fb=function(){ box.innerHTML=''; box.appendChild(document.createTextNode(d+'\n\n')); var a=document.createElement('a'); a.target='_blank'; a.rel='noopener'; a.href='https://translate.google.com/?sl=auto&tl=ru&op=translate&text='+encodeURIComponent(d.slice(0,3500)); a.textContent='Перевести в Google Переводчике'; box.appendChild(a); };
+    if(!(window.claude&&claude.use)){ fb(); return; }
+    box.textContent='Перевожу…';
+    claude.use('sample').then(function(sm){ if(!sm){ fb(); return; } return sm('Переведи на русский язык описание объявления об аренде жилья ПОЛНОСТЬЮ: каждое предложение и каждую деталь (условия, залог, расходы, правила, транспорт, адрес), ничего не сокращай и не пересказывай. Верни только перевод, без комментариев, сохрани абзацы и списки.\n\n'+d.slice(0,12000),{modelTier:'default'}).then(function(r){ showOrig(r.text); try{ localStorage.setItem(ck,r.text); }catch(_){} }); }).catch(function(){ fb(); }); }); },true);
+function mkBtns(c){ var m=marks[key(c)]||""; return '<div class="mk" data-key="'+esc(key(c))+'"><button class="mkb" data-mk="seen" aria-pressed="'+(m==="seen")+'">👁 Смотрел</button><button class="mkb" data-mk="bad" aria-pressed="'+(m==="bad")+'">👎 Нет</button><button class="mkb" data-mk="good" aria-pressed="'+(m==="good")+'">👍 Да</button><button class="mkb" data-mk="called" aria-pressed="'+(!!called[key(c)])+'">📞 Позвонил</button></div>'; }
+function cardCls(c){ var m=marks[key(c)]; return "card"+(m?" m-"+m:""); }
+function writeMark(k){ if(!store) return; try{ var d=store.collection("marks").doc(mid(k)); var s=marks[k]||"", c=called[k]?1:0; ((s||c)?d.set({k:k,s:s,c:c}):d.delete()).catch(function(){}); }catch(e){} }
+function applyMark(k,s){ if(s==="called"){ if(called[k]) delete called[k]; else called[k]=1; saveMarks(); writeMark(k); refreshMarks(); return; } if(marks[k]===s) s=null; if(s) marks[k]=s; else delete marks[k]; saveMarks(); syncFavs(); writeMark(k); refreshMarks(); }
+function refreshMarks(){ buildSections(); if(state.section==='good'||state.section==='called'||state.hideseen||state.hidebad||state.fav||true){ render(); return; } document.querySelectorAll("#list .mk").forEach(function(box){ var m=marks[box.dataset.key]||""; var card=box.closest(".card"); card.className="card"+(m?" m-"+m:""); box.querySelectorAll(".mkb").forEach(function(b){ b.setAttribute("aria-pressed", b.dataset.mk===m); }); }); }
+function extraTags(c){ var s=''; 
+  if(c.furn==='yes') s+='<span class="tag ok">🛋 с мебелью</span>'; else if(c.furn==='?') s+='<span class="tag mid">🛋 мебель уточнить</span>';
+  if(c.park==='incl') s+='<span class="tag ok">🚗 парковка включена в цену</span>';
+  else if(c.park==='extra') s+='<span class="tag mid">🚗 парковка за доплату'+(c.parkn?' ('+esc(c.parkn)+')':'')+'</span>';
+  else if(c.park==='yes') s+='<span class="tag mid">🚗 парковка есть, цену уточнить</span>';
+  else if(c.park==='no') s+='<span class="tag no">🚗 парковки нет</span>';
+  return s; }
+function callBox(c){ if(isRoom(c)) return ''; if(c.phone) return '<div class="call"><a class="tel" href="tel:+34'+esc(c.phone)+'">📞 '+fmtTel(c.phone)+'</a></div>'; return '<div class="nophone">Телефон на сайте скрыт за кнопкой: откройте объявление и нажмите «Показать телефон».</div>'; }
+function roomCard(c){
+  var bathTxt=c.bath==="private"?"свой санузел":(c.bath==="shared"?"общий санузел":"санузел не указан");
+  var facts=["комната",bathTxt,c.minstay?("мин. срок "+c.minstay+" мес."):"мин. срок не указан"].join(" · ");
+  var tags='<span class="tag">'+esc(c.site)+(c.also?" + "+esc(c.also):"")+'</span><span class="tag">'+esc(c.group)+'</span>';
+  if(c.bath==="private") tags='<span class="tag new">с санузлом</span>'+tags;
+  tags+= c.couple==="Y" ? '<span class="tag new">можно вдвоём</span>' : '<span class="tag">вдвоём: не указано</span>';
+  if(isNew(c)||c.first_seen===TODAY) tags='<span class="tag new">новое</span>'+tags;
+  if(c.deferred) tags+='<span class="tag warn">свободно позже</span>';
+  c.flags.forEach(function(f){ tags+='<span class="tag warn">'+esc(f)+'</span>'; });
+  var fav=!!favs[key(c)];
+  var flood=c.city==="BCN"?'':'<a class="btn2" href="https://sig.miteco.gob.es/snczi/" target="_blank" rel="noopener noreferrer">Карта затопления</a>';
+  return '<article class="'+cardCls(c)+'">'+
+    gallery(c)+'<div class="top"><div><div class="price">'+c.price+' <small>€/мес'+(c.extra?' · '+esc(c.extra):'')+'</small></div><div class="facts">'+esc(facts)+'</div></div>'+
+    '<div class="grade g'+c.grade+'" title="Оценка района">'+c.grade+'/5</div></div>'+
+    '<div><div class="zone">'+esc(c.zone.replace(/^BCN /,""))+'</div><div class="addr">'+esc(c.addr)+'</div>'+(c.avail_note?'<div class="avail">'+esc(c.avail_note)+'</div>':'')+'</div>'+
+    '<div class="tags">'+tags+'</div>'+
+    '<details><summary>О районе, транспорт и источники</summary><div class="more"><p><b>Что известно.</b> '+esc(c.note)+'</p><p><b>Транспорт.</b> '+esc(c.transport)+'</p><p><b>Надёжность:</b> '+esc(c.level)+'. Санузел определён по тексту объявления, проверьте при просмотре.</p><ul class="src">'+c.evidence.map(function(e){return '<li><a href="'+esc(e[1])+'" target="_blank" rel="noopener noreferrer">'+esc(e[0])+'</a></li>';}).join("")+'</ul></div></details>'+
+    '<div class="actions"><a class="open" href="'+esc(c.link)+'" target="_blank" rel="noopener noreferrer">Открыть объявление</a>'+
+    '<button class="btn" data-copy="'+esc(c.link)+'" aria-label="Копировать ссылку">Копия</button>'+
+    '</div>'+mkBtns(c)+trBox(c)+sendBox(c)+mapBox(c)+
+    '<div class="actions2"><a class="btn2" href="'+esc(c.maps)+'" target="_blank" rel="noopener noreferrer">Карта и Street View</a>'+flood+'</div>'+
+    '<div class="url">'+esc(c.link)+'</div></article>';
+}
+function goodText(rows){ return rows.map(function(c,i){ var z=String(c.zone||'').replace(/^BCN /,''); return (i+1)+') '+c.price+' € · '+z+' · '+(c.addr||'')+(c.phone?'\n   Тел: '+fmtTel(c.phone):'\n   Тел: на сайте за кнопкой «Показать телефон»')+'\n   '+c.link; }).join('\n\n'); }
+function renderGood(){
+  var rows=DATA.filter(function(c){return marks[c.link]==="good";}).sort(function(a,b){ return (b.phone?1:0)-(a.phone?1:0) || b.score-a.score; });
+  document.getElementById("count").textContent = "Мои «Да»: "+rows.length+" (с готовым телефоном: "+rows.filter(function(c){return c.phone;}).length+")";
+  var list=document.getElementById("list");
+  if(!rows.length){ list.innerHTML='<div class="empty">Пока пусто. Нажимайте «👍 Да» в карточках, и они соберутся здесь вместе с телефонами.</div>'; return; }
+  var txt=goodText(rows);
+  var h='<div class="gtools"><button class="btn" id="gcopy">Копировать весь список</button></div><div class="gl">'+rows.map(function(c){ var z=String(c.zone||'').replace(/^BCN /,'');
+    var gm=c.geo?('https://www.google.com/maps/search/?api=1&query='+c.geo.lat+','+c.geo.lon):c.maps; var gap=(c.geo&&c.geo.lvl!=="addr"&&c.geo.lvl!=="street")?' (район, примерно)':'';
+    return '<div class="gi">'+gallery(c)+'<div class="gt">'+c.price+' € · '+esc(z)+'</div><div class="gz">'+esc(c.addr||'')+' · '+esc(isRoom(c)?'комната':(/студ/.test(c.rooms)?'студия':c.rooms+' комн.'))+(c.m2?' · '+c.m2+' м²':'')+'</div>'+
+      '<div class="tags">'+(isRoom(c)?'':extraTags(c))+'</div>'+
+      (c.phone?'<div class="call"><a class="tel" href="tel:+34'+esc(c.phone)+'">📞 '+fmtTel(c.phone)+'</a></div>':'<div class="nophone">Телефона в данных нет: откройте объявление и нажмите «Показать телефон».</div>')+
+      '<div class="actions2"><a class="btn2" href="'+esc(gm)+'" target="_blank" rel="noopener noreferrer">📍 Google Maps'+gap+'</a><a class="btn2" href="'+esc(c.link)+'" target="_blank" rel="noopener noreferrer">Открыть объявление</a></div>'+
+      '<a class="lnk" href="'+esc(c.link)+'" target="_blank" rel="noopener noreferrer">'+esc(c.link)+'</a></div>'; }).join('')+'</div>'+
+    '<p class="sub" style="margin-top:14px">Текст для копирования (выделите и скопируйте, если кнопка не сработала):</p><textarea class="gtxt" id="gtxt" readonly>'+esc(txt)+'</textarea>';
+  list.innerHTML=h; watchGal();
+}
+function render(){
+  if(state.section==="good"){ renderGood(); return; }
+  var rows=DATA.filter(matches);
+  var s=state.sort;
+  rows.sort(function(a,b){ if(s==="price") return a.price-b.price; if(s==="m2") return (b.m2||0)-(a.m2||0); return b.score-a.score; });
+  document.getElementById("count").textContent = "Найдено: "+rows.length+" из "+DATA.length;
+  var list=document.getElementById("list");
+  if(!rows.length){ list.innerHTML='<div class="empty">Ничего не подошло. Снимите часть фильтров.</div>'; return; }
+  list.innerHTML=rows.map(function(c){
+    var rm=/студ/.test(c.rooms)?"студия":(c.rooms+" комн.");
+    if(isRoom(c)){ return roomCard(c); }
+    var facts=[rm, c.m2?c.m2+" м²":"площадь не указана"].concat(c.lift==="да"?["лифт"]:[]).join(" · ");
+    var tags='<span class="tag">'+esc(c.site)+(c.also?" + "+esc(c.also):"")+'</span><span class="tag">'+(c.temp?"временная аренда":"долгосрочная")+'</span>';
+    if(isNew(c)) tags='<span class="tag new">новое</span>'+tags;
+    c.flags.forEach(function(f){ tags+='<span class="tag warn">'+esc(f)+'</span>'; });
+    tags+=extraTags(c);
+    var fav=!!favs[key(c)];
+    return '<article class="'+cardCls(c)+'">'+
+      gallery(c)+'<div class="top"><div><div class="price">'+c.price+' <small>€/мес</small></div><div class="facts">'+esc(facts)+'</div></div>'+
+      '<div class="grade g'+c.grade+'" title="Оценка района">'+c.grade+'/5</div></div>'+
+      '<div><div class="zone">'+esc(c.zone)+'</div><div class="addr">'+esc(c.addr)+'</div>'+(c.avail_note?'<div class="avail">'+esc(c.avail_note)+'</div>':'')+'</div>'+
+      '<div class="tags">'+tags+'</div>'+
+      '<details><summary>О районе, транспорт и источники</summary><div class="more"><p><b>Что известно.</b> '+esc(c.note)+'</p><p><b>Транспорт.</b> '+esc(c.transport)+'</p><p><b>Надёжность:</b> '+esc(c.level)+'</p><ul class="src">'+c.evidence.map(function(e){return '<li><a href="'+esc(e[1])+'" target="_blank" rel="noopener noreferrer">'+esc(e[0])+'</a></li>';}).join("")+'</ul></div></details>'+
+      '<div class="actions"><a class="open" href="'+esc(c.link)+'" target="_blank" rel="noopener noreferrer">Открыть объявление</a>'+
+      '<button class="btn" data-copy="'+esc(c.link)+'" aria-label="Копировать ссылку">Копия</button>'+
+      '</div>'+callBox(c)+mkBtns(c)+trBox(c)+sendBox(c)+mapBox(c)+
+      '<div class="actions2"><a class="btn2" href="'+esc(c.maps)+'" target="_blank" rel="noopener noreferrer">Карта и Street View</a><a class="btn2" href="https://sig.miteco.gob.es/snczi/" target="_blank" rel="noopener noreferrer">Карта затопления</a></div>'+
+      '<div class="url">'+esc(c.link)+'</div></article>';
+  }).join("");
+  watchGal();
+}
+document.getElementById("sections").addEventListener("click",function(e){ var b=e.target.closest("[data-s]"); if(!b) return; state.section=b.dataset.s; state.group="all"; document.getElementById("groups").hidden=(state.section==="good"||state.section==="bad"||state.section==="beyond"); buildSections(); buildToggles(); buildBaths(); document.getElementById("upd").textContent="Обновлено: "+UPDATED+". Список проверяется каждый час с 8:00 до 22:00.";
+buildSections(); buildGroups(); render(); });
+document.getElementById("groups").addEventListener("click",function(e){ var b=e.target.closest("[data-g]"); if(!b) return; state.group=b.dataset.g; buildBaths(); document.getElementById("upd").textContent="Обновлено: "+UPDATED+". Список проверяется каждый час с 8:00 до 22:00.";
+buildSections(); buildGroups(); render(); });
+document.getElementById("baths").addEventListener("click",function(e){ var b=e.target.closest("[data-b]"); if(!b) return; state.bath=b.dataset.b; buildBaths(); render(); });
+document.getElementById("toggles").addEventListener("click",function(e){ var b=e.target.closest("[data-t]"); if(!b) return; var t=b.dataset.t; state[t]=!state[t]; b.setAttribute("aria-pressed",state[t]); render(); });
+function upHid(){}
+document.getElementById("list").addEventListener("toggle",function(e){ var d=e.target; if(d.classList&&d.classList.contains("mapd")&&d.open){ var m=d.querySelector(".map"); if(m&&!m.dataset.ready){ m.dataset.ready="1"; getPack(m.dataset.pack).then(function(p){ m.innerHTML=(p&&p.m)?'<img alt="Карта" src="'+p.m+'">':"Карта не загрузилась"; }); } } },true);
+document.getElementById("list").addEventListener("scroll",function(e){ var g=e.target; if(g.classList&&g.classList.contains("gal")){ var i=Math.round(g.scrollLeft/(g.clientWidth+6))+1; var s=g.querySelector(".gn"); if(s) s.textContent=i+"/"+g.querySelectorAll("img").length; } },true);
+
+var LOOKUP=__LOOKUP__;
+function lkNorm(x){ return String(x||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[.,;:/()\-]/g,' '); }
+var LK_STOP={en:1,de:1,del:1,la:1,el:1,los:1,las:1,calle:1,carrer:1,c:1,cl:1,avenida:1,av:1,avinguda:1,piso:1,y:1,i:1};
+function lkTok(x){ return lkNorm(x).split(/\s+/).filter(function(w){return w&&!LK_STOP[w];}).map(function(w){ return {passeig:'paseo',passeo:'paseo',pg:'paseo',paseig:'paseo'}[w]||w; }); }
+function lkWordMatch(q,w){ if(q===w) return true; if(/^\d+$/.test(q)||/^\d+$/.test(w)) return false; return q.length>=4&&w.length>=4&&(w.indexOf(q)===0||q.indexOf(w)===0); }
+function lkRun(){
+  var raw=document.getElementById("lkq").value.trim(), out=document.getElementById("lkr");
+  if(!raw){ out.innerHTML=''; return; }
+  var digits=raw.replace(/\D/g,''); var isPhone=digits.length>=6&&!/[a-zA-Zа-яА-Я]/.test(raw);
+  var res=[];
+  if(isPhone){ var d=digits.replace(/^(0034|34)(?=\d{9}$)/,''); res=LOOKUP.filter(function(c){return c.t&&(c.t.indexOf(d)>=0||d.indexOf(c.t)>=0);}); }
+  else { var qt=lkTok(raw); if(qt.length){ res=LOOKUP.filter(function(c){ var w=lkTok((c.a||'')+' '+(c.z||'')); return qt.every(function(q){ return w.some(function(x){return lkWordMatch(q,x);}); }); }); } }
+  var h='';
+  if(!res.length){ h='<div class="lki">Ничего не найдено.'+(isPhone?' Номера Idealista и yaencontre скрыты за кнопкой «Показать телефон», поэтому по номеру находятся только объявления Pisos.com и Fotocasa. Попробуйте поиск по адресу.':'')+'</div>'; }
+  res.slice(0,15).forEach(function(c){ h+='<div class="lki"><b>'+esc(c.s)+'</b> · '+esc(c.p)+' € · '+esc(c.r||'')+(c.m?' · '+esc(c.m)+' м²':'')+'<br>'+esc(c.a||'')+' ('+esc(c.z||'')+')'+(c.t?'<br>📞 '+fmtTel(c.t):'')+'<br><a target="_blank" rel="noopener" href="'+esc(c.l)+'">Открыть объявление</a>'+(c.x?'<div class="lkm">'+esc(c.x)+'</div>':'')+'</div>'; });
+  if(res.length>15) h+='<div class="lkm">Показаны первые 15 из '+res.length+'.</div>';
+  out.innerHTML=h;
+}
+document.getElementById("lkq").addEventListener("input",lkRun);
+document.getElementById("q").addEventListener("input",function(e){ state.q=e.target.value.trim(); render(); });
+document.getElementById("sort").addEventListener("change",function(e){ state.sort=e.target.value; render(); });
+document.getElementById("list").addEventListener("click",function(e){
+  var gc=e.target.closest("#gcopy");
+  if(gc){ var ta=document.getElementById("gtxt"); var ok=function(){ gc.textContent="Скопировано"; setTimeout(function(){gc.textContent="Копировать весь список";},1500); }; try{ navigator.clipboard.writeText(ta.value).then(ok,function(){ ta.select(); gc.textContent="Выделено, скопируйте"; }); }catch(err){ ta.select(); gc.textContent="Выделено, скопируйте"; } return; }
+  var mb=e.target.closest("[data-mk]");
+  if(mb){ applyMark(mb.closest(".mk").dataset.key, mb.dataset.mk); return; }
+  var op=e.target.closest("a.open");
+  if(op){ var kk=op.closest(".card").querySelector(".mk").dataset.key; if(!marks[kk]) applyMark(kk,"seen"); return; }
+  var c=e.target.closest("[data-copy]");
+  if(c){ var url=c.dataset.copy; var done=function(){ c.textContent="Готово"; setTimeout(function(){c.textContent="Копия";},1200); };
+    try{ navigator.clipboard.writeText(url).then(done,function(){ c.textContent="Выделите ссылку ниже"; }); }catch(err){ c.textContent="Выделите ссылку ниже"; } }
+});
+document.getElementById("upd").textContent="Обновлено: "+UPDATED+". Список проверяется каждый час с 8:00 до 22:00.";
+buildToggles(); upHid(); buildSections(); buildGroups(); buildBaths(); render();
+(function(){ if(!(window.claude&&claude.use)) return; claude.use("db").then(function(db){ if(!db) return; var first=true; db.collection("marks").onSnapshot(function(snap){ var m={}, cl={}; snap.docs.forEach(function(d){ var v=d.data(); if(v&&v.k){ if(v.s) m[v.k]=v.s; if(v.c) cl[v.k]=1; } }); if(first){ first=false; store=db; Object.keys(marks).forEach(function(k){ if(!m[k]){ m[k]=marks[k]; try{ db.collection("marks").doc(mid(k)).set({k:k,s:marks[k],c:(called[k]?1:0)}).catch(function(){}); }catch(e){} } }); Object.keys(called).forEach(function(k){ if(!cl[k]){ cl[k]=1; try{ db.collection("marks").doc(mid(k)).set({k:k,s:(m[k]||marks[k]||""),c:1}).catch(function(){}); }catch(e){} } }); } marks=m; called=cl; saveMarks(); syncFavs(); refreshMarks(); }, function(){}); }).catch(function(){}); })();
+</script>

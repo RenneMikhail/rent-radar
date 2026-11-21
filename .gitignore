@@ -1,0 +1,15 @@
+# Личные данные и результаты: только на локальном Mac
+state.json
+inbox/
+details/
+photos/
+cache/
+pub/
+marks_dump/
+geo.json
+*.bak*
+.env
+config.local.json
+message.local.txt
+.venv/
+__pycache__/
