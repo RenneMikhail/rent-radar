@@ -13,3 +13,5 @@ config.local.json
 message.local.txt
 .venv/
 __pycache__/
+outreach_dryrun.md
+outreach_log.json
